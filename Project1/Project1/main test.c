@@ -7,6 +7,8 @@ InverseInitialPermutation(unsigned long *Data);//역 초기순열
 
 KeySchedule(char *Key, DWORD *RoundKey);
 
+DE_KeySchedule(char *Key, DWORD *RoundKey);
+
 
 //-----------------------------------------------------------------------
 
@@ -32,7 +34,8 @@ int main()
 
 	for (int i = 0; i < 16; i++)
 	{
-		Round(original, rKey[2*i], rKey[2*i+1]);
+		printf("오리지널 %lu, %lu, 키값 %u,%u, 들어가는 키값 %u,%u \n", original[0], original[1], rKey[2 * i], rKey[2 * i + 1], 2 * i, 2 * i + 1);
+		Round(original, rKey[2 * i], rKey[2 * i + 1]);//라운드 진행
 		printf("test%d %u,%u\n", i + 1, original[0], original[1]);
 	}
 	printf("test end1 %u,%u\n", original[0], original[1]);
@@ -42,12 +45,16 @@ int main()
 
 	printf("test end2 %u,%u\n", original[0], original[1]);
 
-	InitialPermutation(original);//초기 순열
+	DWORD deRKey[32] = { 0, };//라운드키
+	KeySchedule(key, deRKey);
 
+	InitialPermutation(original);//초기 순열
+	
 	for (int i = 15; i >= 0; i--)
 	{
-		Round(original, rKey[2 * i], rKey[2 * i + 1]);
-		printf("test%d %u,%u\n", i + 1, original[0], original[1]);//sdfa
+		printf("오리지널 %lu, %lu, 키값 %u,%u, 들어가는 키값 %u,%u \n", original[0], original[1], deRKey[2 * i], deRKey[2 * i + 1], 2 * i, 2 * i + 1);
+		Round(original, deRKey[2 * i], deRKey[2 * i + 1]);//라운드 진행
+		printf("test%d %u,%u\n", i + 1, original[0], original[1]);
 	}
 
 	InverseInitialPermutation(original);// 역 초기 순열

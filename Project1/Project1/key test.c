@@ -143,6 +143,51 @@ KeySchedule(char *Key, DWORD *RoundKey)
 	}
 }
 
+DE_KeySchedule(char *Key, DWORD *RoundKey)
+{
+	int SHIFT = 0;
+	DWORD dwKey[2] = { 0,0 };
+	DWORD tmp0, tmp1;
+
+	for (int i = 0; i < 4; i++)
+	{
+		SHIFT = ((3 - i) * 8);
+		dwKey[1] ^= ((DWORD)Key[i]) << SHIFT;
+		dwKey[0] ^= ((DWORD)Key[i + 4]) << SHIFT;
+	}
+	PermutedChoice1(dwKey);//64비트 -> 56비트후 28비트로 나눠 저장
+
+	for (int i = 0; i < 16; i++)
+	{
+		//Left Shift
+		if (LSHIFT[i] == 1)
+		{
+			tmp0 = ((dwKey[0] & 0x08000000) << 27);
+			tmp0 |= ((dwKey[0] & 0x07FFFFFF) >> 1);
+			dwKey[0] = tmp0;
+			tmp1 = ((dwKey[1] & 0x08000000) << 27);
+			tmp1 |= ((dwKey[1] & 0x07FFFFFF) >> 1);
+			dwKey[1] = tmp1;
+		}
+		else //2bit-shift
+		{
+			tmp0 = ((dwKey[0] & 0x0c000000) << 26);
+			tmp0 |= ((dwKey[0] & 0x03FFFFFF) >> 2);
+			dwKey[0] = tmp0;
+			tmp1 = ((dwKey[1] & 0x0c000000) << 26);
+			tmp1 |= ((dwKey[1] & 0x03FFFFFF) >> 2);
+			dwKey[1] = tmp1;
+		}
+		PermutedChoice2(dwKey);
+
+		RoundKey[2 * i + 1] = dwKey[1];
+		RoundKey[2 * i] = dwKey[0];
+
+		dwKey[1] = tmp1;
+		dwKey[0] = tmp0;
+	}
+}
+
 void swap32bit(DWORD *Data)
 
 {
