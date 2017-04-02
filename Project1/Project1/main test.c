@@ -47,7 +47,7 @@ int main()
 	for (int i = 15; i >= 0; i--)
 	{
 		Round(original, rKey[2 * i], rKey[2 * i + 1]);
-		printf("test%d %u,%u\n", i + 1, original[0], original[1]);
+		printf("test%d %u,%u\n", i + 1, original[0], original[1]);//sdfa
 	}
 
 	InverseInitialPermutation(original);// 역 초기 순열
