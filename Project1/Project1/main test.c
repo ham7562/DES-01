@@ -10,18 +10,12 @@ KeySchedule(char *Key, DWORD *RoundKey);
 DE_KeySchedule(char *Key, DWORD *RoundKey);
 
 
-//-----------------------------------------------------------------------
-
-
-
-//---------------------------------------------
-
 
 
 
 int main()
 {
-	unsigned long original[2] = { 12321415,2222222 }, i = 0;
+	unsigned long original[2] = { 12321415,2222222 };
 	char key[] = {'a','b'};
 
 	printf("%u,%u\n", original[0], original[1]);
